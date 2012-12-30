@@ -25,7 +25,7 @@ syn keyword	cConditional	if else switch
 syn keyword	cRepeat		while for do
 syn keyword     cConstant       TRUE FALSE
 
-syn keyword     dmBuiltinTypes  list
+syn keyword     dmBuiltinTypes  list world savefile
 
 syn keyword	cTodo		contained   TODO FIXME XXX
 
