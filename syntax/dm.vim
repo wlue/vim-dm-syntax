@@ -1,7 +1,7 @@
 " Vim syntax file
-" Language:	DM
-" Maintainer:	Wen-Hao Lue <me@wenhaolue.com>
-" Last Change:	2012 Dec 29
+" Language:     DM
+" Maintainer:   Wen-Hao Lue <me@wenhaolue.com>
+" Last Change:  2012 Dec 29
 
 " Based on the C Syntax file.
 
@@ -20,134 +20,95 @@ syn sync fromstart
 
 " A bunch of useful keywords
 syn case match
-syn keyword	cStatement	goto break return continue
-syn keyword	cConditional	if else switch
-syn keyword	cRepeat		while for do
-syn keyword     cConstant       TRUE FALSE
+syn keyword     dmStatement     goto break return continue
+syn keyword     dmStatement     var proc verb set as new del in to global arg const tmp
+syn keyword     dmConditional   if else switch
+syn keyword     dmRepeat        while for do
+syn keyword     dmConstant      TRUE FALSE
 
-syn keyword     dmBuiltinTypes  list world savefile
+syn keyword     dmBuiltinTypes  world savefile
+syn keyword     dmIdentifiers   src usr
+syn case ignore
 
-syn keyword	cTodo		contained   TODO FIXME XXX
 
-syn keyword     cStatement      var proc verb set as new del in to global arg const tmp
 syn region      dmFile          start=/\v'/ end=/\v'/
-syn region      dmEmbeddedExpr  start=/\[/ end=/\]/ contained contains=cSting,cLongString,dmEmbeddedExpr
+syn region      dmEmbeddedExpr  start=/\[/ end=/\]/ contained contains=dmString,dmLongString,dmEmbeddedExpr
 
-" cCommentGroup allows adding matches for special things in comments
-syn cluster	cCommentGroup	contains=cTodo
+" Function names
+syn match       dmFunc          /\v\w+(\s|[\\\w+\n])*\(/he=e-1
+
+" dmCommentGroup allows adding matches for special things in comments
+syn keyword     dmTodo          contained   TODO FIXME XXX
+syn cluster	dmCommentGroup	contains=dmTodo
 
 " String and Character constants
 " Highlight special characters (those which have a backslash) differently
-" syn match	cSpecial	display contained "\\\(x\x\+\|\o\{1,3}\|.\|$\)"
-" syn match	cSpecial	display contained "\\ref"
-" syn match	cSpecial	display contained "\\s"
-syn region	cString		start=+L\="+ skip=+\\\\\|\\"+ end=+"+ contains=cSpecial,@Spell,dmEmbeddedExpr,@HTML
-syn region	cLongString	start=+{"+ end=+"}+ contains=cSpecial,@Spell,dmEmbeddedExpr,@HTML
+syn match       dmSpecial       display contained /\v\\(s|n|ref|icon)/
+syn region	dmString	start=+L\="+ skip=+\\\\\|\\"+ end=+"+ contains=dmSpecial,@Spell,dmEmbeddedExpr,@HTML
+syn region	dmLongString	start=+{"+ end=+"}+ contains=dmSpecial,@Spell,dmEmbeddedExpr,@HTML
 
-syn match	cCharacter	"L\='[^\\]'"
-syn match	cCharacter	"L'[^']*'" contains=cSpecial
-
-syn match	cSpecialCharacter "L\='\\['\"?\\abfnrtv]'"
-syn match	cSpecialCharacter display "L\='\\\o\{1,3}'"
-syn match	cSpecialCharacter display "'\\x\x\{1,2}'"
-syn match	cSpecialCharacter display "L'\\x\x\+'"
 
 " "catch errors caused by wrong parenthesis and brackets
 " " also accept <% for {, %> for }, <: for [ and :> for ] (C99)
 " " But avoid matching <::.
-" syn cluster	cParenGroup	contains=cParenError,cIncluded,cSpecial,cCommentSkip,cCommentString,cComment2String,@cCommentGroup,cCommentStartError,cUserCont,cUserLabel,cBitField,cOctalZero,cCppOut,cCppOut2,cCppSkip,cFormat,cNumber,cFloat,cOctal,cOctalError,cNumbersCom
+" syn cluster	cParenGroup	contains=cParenError,dmIncluded,dmSpecial,dmCommentSkip,dmCommentString,dmComment2String,@dmCommentGroup,dmCommentStartError,cUserCont,cUserLabel,cBitField,dmOctalZero,cCppOut,cCppOut2,cCppSkip,cFormat,dmNumber,cFloat,dmOctal,dmOctalError,dmNumbersCom
 " if exists("c_no_curly_error")
 "   syn region	cParen		transparent start='(' end=')' contains=ALLBUT,@cParenGroup,cCppParen,cCppString,@Spell
-"   " cCppParen: same as cParen but ends at end-of-line; used in cDefine
-"   syn region	cCppParen	transparent start='(' skip='\\$' excludenl end=')' end='$' contained contains=ALLBUT,@cParenGroup,cParen,cString,@Spell
+"   " cCppParen: same as cParen but ends at end-of-line; used in dmDefine
+"   syn region	cCppParen	transparent start='(' skip='\\$' excludenl end=')' end='$' contained contains=ALLBUT,@cParenGroup,cParen,dmString,@Spell
 "   syn match	cParenError	display ")"
 "   syn match	cErrInParen	display contained "^[{}]\|^<%\|^%>"
 " elseif exists("c_no_bracket_error")
 "   syn region	cParen		transparent start='(' end=')' contains=ALLBUT,@cParenGroup,cCppParen,cCppString,@Spell
-"   " cCppParen: same as cParen but ends at end-of-line; used in cDefine
-"   syn region	cCppParen	transparent start='(' skip='\\$' excludenl end=')' end='$' contained contains=ALLBUT,@cParenGroup,cParen,cString,@Spell
+"   " cCppParen: same as cParen but ends at end-of-line; used in dmDefine
+"   syn region	cCppParen	transparent start='(' skip='\\$' excludenl end=')' end='$' contained contains=ALLBUT,@cParenGroup,cParen,dmString,@Spell
 "   syn match	cParenError	display ")"
 "   syn match	cErrInParen	display contained "[{}]\|<%\|%>"
 " else
 "   syn region	cParen		transparent start='(' end=')' contains=ALLBUT,@cParenGroup,cCppParen,cErrInBracket,cCppBracket,cCppString,@Spell
-"   " cCppParen: same as cParen but ends at end-of-line; used in cDefine
-"   syn region	cCppParen	transparent start='(' skip='\\$' excludenl end=')' end='$' contained contains=ALLBUT,@cParenGroup,cErrInBracket,cParen,cBracket,cString,@Spell
+"   " cCppParen: same as cParen but ends at end-of-line; used in dmDefine
+"   syn region	cCppParen	transparent start='(' skip='\\$' excludenl end=')' end='$' contained contains=ALLBUT,@cParenGroup,cErrInBracket,cParen,cBracket,dmString,@Spell
 "   syn match	cParenError	display "[\])]"
 "   syn match	cErrInParen	display contained "[\]{}]\|<%\|%>"
 "   syn region	cBracket	transparent start='\[\|<::\@!' end=']\|:>' contains=ALLBUT,@cParenGroup,cErrInParen,cCppParen,cCppBracket,cCppString,@Spell
-"   " cCppBracket: same as cParen but ends at end-of-line; used in cDefine
-"   syn region	cCppBracket	transparent start='\[\|<::\@!' skip='\\$' excludenl end=']\|:>' end='$' contained contains=ALLBUT,@cParenGroup,cErrInParen,cParen,cBracket,cString,@Spell
+"   " cCppBracket: same as cParen but ends at end-of-line; used in dmDefine
+"   syn region	cCppBracket	transparent start='\[\|<::\@!' skip='\\$' excludenl end=']\|:>' end='$' contained contains=ALLBUT,@cParenGroup,cErrInParen,cParen,cBracket,dmString,@Spell
 "   syn match	cErrInBracket	display contained "[);{}]\|<%\|%>"
 " endif
 
-"integer number, or floating point number without a dot and with "f".
+" Numbers:
 syn case ignore
-syn match	cNumbers	display transparent "\<\d\|\.\d" contains=cNumber,cFloat,cOctalError,cOctal
-" Same, but without octal error (for comments)
-syn match	cNumbersCom	display contained transparent "\<\d\|\.\d" contains=cNumber,cFloat,cOctal
-syn match	cNumber		display contained "\d\+\(u\=l\{0,2}\|ll\=u\)\>"
-"hex number
-syn match	cNumber		display contained "0x\x\+\(u\=l\{0,2}\|ll\=u\)\>"
-" Flag the first zero of an octal number as something special
-syn match	cOctal		display contained "0\o\+\(u\=l\{0,2}\|ll\=u\)\>" contains=cOctalZero
-syn match	cOctalZero	display contained "\<0"
+syn match	dmNumbers	display transparent "\<\d\|\.\d" contains=dmNumber,cFloat,dmOctalError,dmOctal
+syn match	dmNumbersCom	display contained transparent "\<\d\|\.\d" contains=dmNumber,cFloat,dmOctal
+syn match	dmNumber	display contained "\d\+\(u\=l\{0,2}\|ll\=u\)\>"
 
-" flag an octal number with wrong digits
-syn match	cOctalError	display contained "0\o*[89]\d*"
+" Hex number
+syn match	dmNumber	display contained "0x\x\+\(u\=l\{0,2}\|ll\=u\)\>"
+
+" Flag the first zero of an octal number as something special
+syn match	dmOctal		display contained "0\o\+\(u\=l\{0,2}\|ll\=u\)\>" contains=dmOctalZero
+syn match	dmOctalZero	display contained "\<0"
+
+" Flag an octal number with wrong digits
+syn match	dmOctalError	display contained "0\o*[89]\d*"
 syn case match
 
-if exists("c_comment_strings")
-  " A comment can contain cString, cCharacter and cNumber.
-  " But a "*/" inside a cString in a cComment DOES end the comment!  So we
-  " need to use a special type of cString: cCommentString, which also ends on
-  " "*/", and sees a "*" at the start of the line as comment again.
-  " Unfortunately this doesn't very well work for // type of comments :-(
-  syntax match	cCommentSkip	contained "^\s*\*\($\|\s\+\)"
-  syntax region cCommentString	contained start=+L\=\\\@<!"+ skip=+\\\\\|\\"+ end=+"+ end=+\*/+me=s-1 contains=cSpecial,cCommentSkip
-  syntax region cComment2String	contained start=+L\=\\\@<!"+ skip=+\\\\\|\\"+ end=+"+ end="$" contains=cSpecial
-  syntax region  cCommentL	start="//" skip="\\$" end="$" keepend contains=@cCommentGroup,cComment2String,cCharacter,cNumbersCom,cSpaceError,@Spell
-  if exists("c_no_comment_fold")
-    " Use "extend" here to have preprocessor lines not terminate halfway a
-    " comment.
-    syntax region cComment	matchgroup=cCommentStart start="/\*" end="\*/" contains=@cCommentGroup,cCommentStartError,cCommentString,cCharacter,cNumbersCom,cSpaceError,@Spell extend
-  else
-    syntax region cComment	matchgroup=cCommentStart start="/\*" end="\*/" contains=@cCommentGroup,cCommentStartError,cCommentString,cCharacter,cNumbersCom,cSpaceError,@Spell fold extend
-  endif
-else
-  syn region	cCommentL	start="//" skip="\\$" end="$" keepend contains=@cCommentGroup,cSpaceError,@Spell
-  if exists("c_no_comment_fold")
-    syn region	cComment	matchgroup=cCommentStart start="/\*" end="\*/" contains=@cCommentGroup,cCommentStartError,cSpaceError,@Spell extend
-  else
-    syn region	cComment	matchgroup=cCommentStart start="/\*" end="\*/" contains=@cCommentGroup,cCommentStartError,cSpaceError,@Spell fold extend
-  endif
-endif
-" keep a // comment separately, it terminates a preproc. conditional
-syntax match	cCommentError	display "\*/"
-syntax match	cCommentStartError display "/\*"me=e-1 contained
+syn region      dmCommentL	start="//" skip="\\$" end="$" keepend contains=@dmCommentGroup,@Spell
+syn region	dmComment	start="/\*" end="\*/" contains=@dmCommentGroup,@Spell,dmComment extend
 
+" Preprocessor:
+syn region	dmPreCondit	start="^\s*\(%:\|#\)\s*\(if\|ifdef\|ifndef\|elif\)\>" skip="\\$" end="$" end="//"me=s-1 contains=dmComment,cCppString,cCharacter,cCppParen,cParenError,dmNumbers,cSpaceError
+syn match	dmPreCondit	display "^\s*\(%:\|#\)\s*\(else\|endif\)\>"
 
-" Accept %: for # (C99)
-syn region	cPreCondit	start="^\s*\(%:\|#\)\s*\(if\|ifdef\|ifndef\|elif\)\>" skip="\\$" end="$" end="//"me=s-1 contains=cComment,cCppString,cCharacter,cCppParen,cParenError,cNumbers,cCommentError,cSpaceError
-syn match	cPreCondit	display "^\s*\(%:\|#\)\s*\(else\|endif\)\>"
-" if !exists("c_no_if0")
-"   if !exists("c_no_if0_fold")
-"     syn region	cCppOut		start="^\s*\(%:\|#\)\s*if\s\+0\+\>" end=".\@=\|$" contains=cCppOut2 fold
-"   else
-"     syn region	cCppOut		start="^\s*\(%:\|#\)\s*if\s\+0\+\>" end=".\@=\|$" contains=cCppOut2
-"   endif
-"   syn region	cCppOut2	contained start="0" end="^\s*\(%:\|#\)\s*\(endif\>\|else\>\|elif\>\)" contains=cSpaceError,cCppSkip
-"   syn region	cCppSkip	contained start="^\s*\(%:\|#\)\s*\(if\>\|ifdef\>\|ifndef\>\)" skip="\\$" end="^\s*\(%:\|#\)\s*endif\>" contains=cSpaceError,cCppSkip
-" endif
-syn region	cIncluded	display contained start=+"+ skip=+\\\\\|\\"+ end=+"+
-syn match	cIncluded	display contained "<[^>]*>"
-syn match	cInclude	display "^\s*\(%:\|#\)\s*include\>\s*["<]" contains=cIncluded
-"syn match cLineSkip	"\\$"
-syn cluster	cPreProcGroup	contains=cPreCondit,cIncluded,cInclude,cDefine,cErrInParen,cErrInBracket,cUserLabel,cSpecial,cOctalZero,cCppOut,cCppOut2,cCppSkip,cFormat,cNumber,cFloat,cOctal,cOctalError,cNumbersCom,cString,cCommentSkip,cCommentString,cComment2String,@cCommentGroup,cCommentStartError,cParen,cBracket,cMulti
-syn region	cDefine		start="^\s*\(%:\|#\)\s*\(define\|undef\)\>" skip="\\$" end="$" end="//"me=s-1 keepend contains=ALLBUT,@cPreProcGroup,@Spell
-syn region	cPreProc	start="^\s*\(%:\|#\)\s*\(pragma\>\|line\>\|warning\>\|warn\>\|error\>\)" skip="\\$" end="$" keepend contains=ALLBUT,@cPreProcGroup,@Spell
+syn region	dmIncluded	display contained start=+"+ skip=+\\\\\|\\"+ end=+"+
+syn match	dmIncluded	display contained "<[^>]*>"
+syn match	dmInclude	display "^\s*\(%:\|#\)\s*include\>\s*["<]" contains=dmIncluded
+syn cluster	dmPreProcGroup	contains=dmPreCondit,dmIncluded,dmInclude,dmDefine,cErrInParen,cErrInBracket,cUserLabel,dmSpecial,dmOctalZero,cCppOut,cCppOut2,cCppSkip,cFormat,dmNumber,cFloat,dmOctal,dmOctalError,dmNumbersCom,dmString,dmCommentSkip,dmCommentString,dmComment2String,@dmCommentGroup,dmCommentStartError,cParen,cBracket,cMulti
+syn region	dmDefine	start="^\s*\(%:\|#\)\s*\(define\|undef\)\>" skip="\\$" end="$" end="//"me=s-1 keepend contains=ALLBUT,@dmPreProcGroup,@Spell
+syn region	dmPreProc	start="^\s*\(%:\|#\)\s*\(pragma\>\|line\>\|warning\>\|warn\>\|error\>\)" skip="\\$" end="$" keepend contains=ALLBUT,@dmPreProcGroup,@Spell
 
-" Highlight User Labels
-syn cluster	cMultiGroup	contains=cIncluded,cSpecial,cCommentSkip,cCommentString,cComment2String,@cCommentGroup,cCommentStartError,cUserCont,cUserLabel,cBitField,cOctalZero,cCppOut,cCppOut2,cCppSkip,cFormat,cNumber,cFloat,cOctal,cOctalError,cNumbersCom,cCppParen,cCppBracket,cCppString
+" Labels:
+syn cluster	cMultiGroup	contains=dmIncluded,dmSpecial,dmCommentSkip,dmCommentString,dmComment2String,@dmCommentGroup,dmCommentStartError,cUserCont,cUserLabel,cBitField,dmOctalZero,cCppOut,cCppOut2,cCppSkip,cFormat,dmNumber,cFloat,dmOctal,dmOctalError,dmNumbersCom,cCppParen,cCppBracket,cCppString
 syn region	cMulti		transparent start='?' skip='::' end=':' contains=ALLBUT,@cMultiGroup,@Spell
 " Avoid matching foo::bar() in C++ by requiring that the next char is not ':'
 syn cluster	cLabelGroup	contains=cUserLabel
@@ -158,56 +119,42 @@ syn match	cUserCont	display ";\s*\I\i*\s*:[^:]"me=e-1 contains=@cLabelGroup
 
 syn match	cUserLabel	display "\I\i*" contained
 
+
+" Highlighting:
 " Define the default highlighting.
 " Only used when an item doesn't have highlighting yet
-hi def link cFormat		cSpecial
-hi def link cCommentL		cComment
-hi def link cCommentStart	cComment
+hi def link cFormat		dmSpecial
+hi def link dmCommentL		dmComment
+hi def link dmComment		Comment
 hi def link cLabel		Label
 hi def link cUserLabel		Label
-hi def link cConditional	Conditional
-hi def link cRepeat		Repeat
-hi def link cCharacter		Character
-hi def link cSpecialCharacter	cSpecial
-hi def link cNumber		Number
-hi def link cOctal		Number
-hi def link cOctalZero		PreProc	 " link this to Error if you want
-hi def link cFloat		Float
-hi def link cOctalError		cError
-hi def link cParenError		cError
-hi def link cErrInParen		cError
-hi def link cErrInBracket	cError
-hi def link cCommentError	cError
-hi def link cCommentStartError	cError
-hi def link cSpaceError		cError
-hi def link cSpecialError	cError
-hi def link cCurlyError		cError
-hi def link cOperator		Operator
-hi def link cStructure		Structure
-hi def link cStorageClass	StorageClass
-hi def link cInclude		Include
-hi def link cPreProc		PreProc
-hi def link cDefine		Macro
-hi def link cIncluded		cString
-hi def link cError		Error
-hi def link cStatement		Statement
-hi def link cPreCondit		PreCondit
-hi def link cType		Type
-hi def link cConstant		Constant
-hi def link cCommentString	cString
-hi def link cComment2String	cString
-hi def link cCommentSkip	cComment
-hi def link cString		String
+hi def link dmConditional	Conditional
+hi def link dmRepeat		Repeat
+hi def link dmSpecialCharacter	dmSpecial
+hi def link dmNumber		Number
+hi def link dmOctal		Number
+hi def link dmOctalError	dmError
+hi def link cParenError		dmError
+hi def link cErrInParen		dmError
+hi def link cErrInBracket	dmError
+hi def link dmInclude		Include
+hi def link dmPreProc		PreProc
+hi def link dmDefine		Macro
+hi def link dmIncluded		dmString
+hi def link dmError		Error
+hi def link dmStatement		Statement
+hi def link dmPreCondit		PreCondit
+hi def link dmConstant		Constant
+hi def link dmString		String
 hi def link dmFile 		String
-hi def link cLongString		String
-hi def link cComment		Comment
-hi def link cSpecial		SpecialChar
-hi def link cTodo		Todo
-hi def link cCppSkip		cCppOut
-hi def link cCppOut2		cCppOut
-hi def link cCppOut		Comment
-hi def link dmBuiltinTypes      Type
-hi def link dmEmbeddedExpr	Type
+hi def link dmLongString	String
+hi def link dmSpecial		SpecialChar
+hi def link dmTodo		Todo
+" hi def link dmBuiltinTypes      Identifier
+" hi def link dmIdentifiers       Identifier
+hi def link dmEmbeddedExpr      Type
+hi def link dmFunc              Function
+
 
 let b:current_syntax = "dm"
 
