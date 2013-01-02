@@ -30,7 +30,6 @@ syn keyword     dmBuiltinTypes  world savefile
 syn keyword     dmIdentifiers   src usr
 syn case ignore
 
-
 syn region      dmFile          start=/\v'/ end=/\v'/
 syn region      dmEmbeddedExpr  start=/\[/ end=/\]/ contained contains=dmString,dmLongString,dmEmbeddedExpr
 
@@ -43,8 +42,8 @@ syn cluster	dmCommentGroup	contains=dmTodo
 
 " String and Character constants
 " Highlight special characters (those which have a backslash) differently
-syn match       dmSpecial       display contained /\v\\(s|n|ref|icon)/
-syn region	dmString	start=+L\="+ skip=+\\\\\|\\"+ end=+"+ contains=dmSpecial,@Spell,dmEmbeddedExpr,@HTML
+syn match       dmSpecial       display contained /\v\\(ref|icon|.)/
+syn region	dmString	start=+L\="+ skip=+\\\\\|\\"+ end=+"+ contains=dmSpecial,@Spell,dmEmbeddedExpr
 syn region	dmLongString	start=+{"+ end=+"}+ contains=dmSpecial,@Spell,dmEmbeddedExpr,@HTML
 
 
